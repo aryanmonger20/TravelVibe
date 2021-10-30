@@ -48,7 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize({
     replaceWith: '_'
 }))
-const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+const secret = process.env.SECRET || 'waduhekwaduhek!';
 
 const store = new MongoDBStore({
     url: dbUrl,
@@ -129,11 +129,16 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
+
+
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+
     res.locals.currentUser = req.user;
+
     res.locals.success = req.flash('success');
+
     res.locals.error = req.flash('error');
     next();
 })
@@ -155,11 +160,13 @@ app.all('*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
-    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+
+    if (!err.message) err.message = 'Something Went Wrong!'
+
     res.status(statusCode).render('error', { err })
 })
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Serving on port ${port}`)
+    console.log(`Starting server on port ${port}`)
 })
